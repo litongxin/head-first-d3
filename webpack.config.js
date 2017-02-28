@@ -3,7 +3,8 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: {
-    bkc1: "./src/js/bkc1.js"
+    bkc1: "./src/js/bkc1.js",
+    bkc2: "./src/js/bkc2.js"
   },
   output: {
     path: path.join(__dirname, 'dist'),
