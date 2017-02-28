@@ -35177,19 +35177,74 @@ Object.defineProperty(exports, '__esModule', { value: true });
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(8)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(4)(module)))
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(4);
+var content = __webpack_require__(6);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(6)(content, {});
+var update = __webpack_require__(8)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35206,21 +35261,21 @@ if(false) {
 }
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(5)();
+exports = module.exports = __webpack_require__(7)();
 // imports
 
 
 // module
-exports.push([module.i, "body {\n  margin: 0;\n  padding: 0; }\n  body .test {\n    color: green; }\n", ""]);
+exports.push([module.i, "body {\n  margin: 0;\n  padding: 0;\n  font-family: 'Open Sans', sans-serif; }\n  body svg g {\n    font-family: 'Open Sans', sans-serif; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 /*
@@ -35276,7 +35331,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /*
@@ -35528,61 +35583,6 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -35601,7 +35601,7 @@ var _bookmarks = __webpack_require__(0);
 
 var _bookmarks2 = _interopRequireDefault(_bookmarks);
 
-__webpack_require__(3);
+__webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35616,10 +35616,14 @@ var svg = d3.select("body").append("svg").attr("width", width).attr("height", he
 
 var padding = { left: 60, right: 30, top: 20, bottom: 40 };
 
-var dataSetX = _lodash2.default.map(_bookmarks2.default, 'created');
-var dataSetY = _lodash2.default.map(_bookmarks2.default, 'count');
+var dataSet = _lodash2.default.each(_bookmarks2.default, function (d) {
+  d.created = new Date(d.created);
+});
 
-var xScale = d3.scaleTime().domain([new Date(_lodash2.default.first(dataSetX)), new Date(_lodash2.default.last(dataSetX))]).range([0, dataSetX.length]);
+var dataSetX = _lodash2.default.map(dataSet, 'created');
+var dataSetY = _lodash2.default.map(dataSet, 'count');
+
+var xScale = d3.scaleTime().domain([_lodash2.default.first(dataSetX), _lodash2.default.last(dataSetX)]).range([0, dataSetX.length]);
 
 var yScale = d3.scaleLinear().domain([0, d3.max(dataSetY)]).range([height - padding.top - padding.bottom, 0]);
 
@@ -35628,16 +35632,12 @@ var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y-%m"));
 var yAxis = d3.axisLeft(yScale);
 
 var line = d3.line().x(function (d) {
-  return xScale(new Date(d.created));
+  return xScale(d.created);
 }).y(function (d) {
   return yScale(d.count);
 });
 
-var dateSet = _lodash2.default.each(_bookmarks2.default, function (d) {
-  d.created = new Date(d.created);
-});
-
-svg.append("path").data([dateSet]).attr("class", "line").attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("d", line);
+svg.append("path").data([dataSet]).attr("class", "line").attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("d", line);
 
 svg.append("g").attr("class", "axis").attr("transform", "translate(" + padding.left + "," + (height - padding.bottom) + ")").call(xAxis);
 

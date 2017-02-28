@@ -15,12 +15,16 @@ const svg = d3.select("body")
 
 const padding = {left: 60, right: 30, top: 20, bottom: 40};
 
-const dataSetX = _.map(bookmarks, 'created');
-const dataSetY = _.map(bookmarks, 'count');
+const dataSet = _.each(bookmarks, (d) => {
+  d.created = new Date(d.created);
+});
+
+const dataSetX = _.map(dataSet, 'created');
+const dataSetY = _.map(dataSet, 'count');
 
 
 const xScale = d3.scaleTime()
-  .domain([new Date(_.first(dataSetX)), new Date(_.last(dataSetX))])
+  .domain([_.first(dataSetX), _.last(dataSetX)])
   .range([0, dataSetX.length]);
 
 const yScale = d3.scaleLinear()
@@ -33,18 +37,14 @@ const yAxis = d3.axisLeft(yScale);
 
 const line = d3.line()
   .x((d) => {
-    return xScale(new Date(d.created))
+    return xScale(d.created)
   })
   .y((d) => {
     return yScale(d.count)
   });
 
-const dateSet = _.each(bookmarks, (d) => {
-  d.created = new Date(d.created);
-});
-
 svg.append("path")
-  .data([dateSet])
+  .data([dataSet])
   .attr("class", "line")
   .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
   .attr("d", line);
