@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33992,13 +33992,15 @@ module.exports = function(module) {
 /* 7 */,
 /* 8 */,
 /* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(15);
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -34007,8 +34009,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./lec1.scss", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./lec1.scss");
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./lec3.scss", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./lec3.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -34018,11 +34020,11 @@ if(false) {
 }
 
 /***/ }),
-/* 11 */,
-/* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */
+/* 15 */,
+/* 16 */,
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -34030,17 +34032,17 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "html {\n  font-size: 62.5%; }\n\nbody {\n  font-size: 1rem;\n  font-family: 'Open Sans', sans-serif;\n  font-weight: 400;\n  fill: #8C8C8C;\n  text-align: center; }\n\n.axis text {\n  font-size: 75%; }\n\n.scale-text {\n  fill: #62997A;\n  font-weight: bold; }\n", ""]);
+exports.push([module.i, "html {\n  font-size: 62.5%; }\n\nbody {\n  font-size: 1rem;\n  font-family: 'Open Sans', sans-serif;\n  font-weight: 400;\n  fill: #8C8C8C;\n  text-align: center; }\n\n.axis text {\n  font-size: 75%; }\n\n.title {\n  font-size: 1.2rem;\n  font-weight: bold; }\n\n.scale-text {\n  fill: #11766D;\n  font-weight: bold; }\n\n.line {\n  stroke-width: 2px;\n  fill: none; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 16 */,
-/* 17 */,
 /* 18 */,
 /* 19 */,
-/* 20 */
+/* 20 */,
+/* 21 */,
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34054,7 +34056,7 @@ var _lodash = __webpack_require__(1);
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-__webpack_require__(10);
+__webpack_require__(12);
 
 __webpack_require__(6);
 
@@ -34076,30 +34078,32 @@ d3.text('./dist/API_SP.DYN.LE00.IN_DS2_en_csv_v2.csv', function (data) {
     return l.substr(0, l.length - 2);
   });
 
+  var countries = ['China', 'Australia', 'Japan', 'Finland', 'Brazil', 'Yemen, Rep.'];
+
   var dataSet = d3.csvParse(trimmedLines.join("\n"));
-  // const countries = _.map(dataSet, (d) => {
-  //   return d["Country Name"];
-  // });
   var dataSetX = _lodash2.default.filter(Object.keys(dataSet[0]), function (k) {
     return k.isNumber();
   });
-  var chinaData = _lodash2.default.filter(dataSet, function (d) {
-    return d["Country Name"] == 'China';
+  var countriesData = _lodash2.default.map(countries, function (c) {
+    return _lodash2.default.filter(dataSet, function (d) {
+      return d["Country Name"] == c;
+    });
   });
-  var dataSetY = _lodash2.default.map(dataSetX, function (d) {
-    return chinaData[0][d];
-  });
-  var objArray = _lodash2.default.map(chinaData[0], function (v, k) {
-    if (k.isNumber() && v != '') {
-      return { x: k, y: v };
-    }
-  });
-  var nodes = _lodash2.default.filter(objArray, function (d) {
-    return d != undefined;
+  var dataSetY = _lodash2.default.union(_lodash2.default.flatten(_lodash2.default.map(countriesData, function (c) {
+    return _lodash2.default.map(dataSetX, function (d) {
+      return c[0][d];
+    });
+  })));
+  var countriesObj = _lodash2.default.map(countriesData, function (c) {
+    return _lodash2.default.map(c[0], function (v, k) {
+      if (k.isNumber() && v != '') {
+        return { x: k, y: v };
+      }
+    });
   });
 
   var width = Math.max(Math.min(window.innerWidth, dataSetX.length * 10), 1200),
-      height = dataSetY.length * 5;
+      height = dataSetY.length * 2;
 
   var xScale = d3.scaleOrdinal().domain(dataSetX).range(_lodash2.default.range(0, dataSetX.length * 20, 20));
 
@@ -34111,7 +34115,7 @@ d3.text('./dist/API_SP.DYN.LE00.IN_DS2_en_csv_v2.csv', function (data) {
 
   var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
-  svg.append("text").attr("class", "title").attr("x", width / 2).attr("y", 30).style("text-anchor", "middle").text("Life expectancy at birth for China ");
+  svg.append("text").attr("class", "title").attr("x", width / 2).attr("y", 30).style("text-anchor", "middle").text("Life expectancy at birth");
 
   svg.append("g").attr("class", "axis").attr("transform", "translate(" + padding.left * 1.2 + "," + (height - padding.bottom) + ")").call(xAxis);
 
@@ -34121,13 +34125,54 @@ d3.text('./dist/API_SP.DYN.LE00.IN_DS2_en_csv_v2.csv', function (data) {
 
   svg.append("text").attr("class", "scale-text").attr("transform", "rotate(-90)").attr("y", padding.left / 10).attr("x", 0 - height / 2).attr("dy", "1em").style("text-anchor", "middle").text("Age");
 
-  svg.selectAll("circle").data(nodes).enter().append("circle").attr("cx", function (d) {
-    return xScale(d.x) + padding.left * 1.2;
-  }).attr("cy", function (d) {
-    return yScale(d.y) + padding.top;
-  }).attr("r", function (d) {
-    return 3;
-  }).style("fill", "#62997A");
+  var chinaNodes = _lodash2.default.filter(countriesObj[0], function (d) {
+    return d != undefined;
+  });
+  var australiaNodes = _lodash2.default.filter(countriesObj[1], function (d) {
+    return d != undefined;
+  });
+  var japanNodes = _lodash2.default.filter(countriesObj[2], function (d) {
+    return d != undefined;
+  });
+  var finlandNodes = _lodash2.default.filter(countriesObj[3], function (d) {
+    return d != undefined;
+  });
+  var brazilNodes = _lodash2.default.filter(countriesObj[4], function (d) {
+    return d != undefined;
+  });
+  var yemenNodes = _lodash2.default.filter(countriesObj[5], function (d) {
+    return d != undefined;
+  });
+
+  var line = d3.line().x(function (d) {
+    return xScale(d.x);
+  }).y(function (d) {
+    return yScale(d.y);
+  });
+
+  svg.append("path").data([chinaNodes]).attr("class", "line china").attr("transform", "translate(" + padding.left * 1.2 + "," + padding.top + ")").attr("stroke", "#FF9036").attr("d", line);
+
+  svg.append("text").attr("transform", "translate(" + (xScale(_lodash2.default.last(chinaNodes).x) + padding.left * 1.5) + "," + (yScale(_lodash2.default.last(chinaNodes).y) + padding.top) + ")").attr("dy", ".35em").attr("text-anchor", "start").style("fill", "#FF9036").text("China");
+
+  svg.append("path").data([australiaNodes]).attr("class", "line australia").attr("transform", "translate(" + padding.left * 1.2 + "," + padding.top + ")").attr("stroke", "#FF5475").attr("d", line);
+
+  svg.append("text").attr("transform", "translate(" + (xScale(_lodash2.default.last(australiaNodes).x) + padding.left * 1.5) + "," + (yScale(_lodash2.default.last(australiaNodes).y) + padding.top) + ")").attr("dy", ".35em").attr("text-anchor", "start").style("fill", "#FF5475").text("Australia");
+
+  svg.append("path").data([japanNodes]).attr("class", "line japan").attr("transform", "translate(" + padding.left * 1.2 + "," + padding.top + ")").attr("stroke", "#1693A7").attr("d", line);
+
+  svg.append("text").attr("transform", "translate(" + (xScale(_lodash2.default.last(japanNodes).x) + padding.left * 1.5) + "," + (yScale(_lodash2.default.last(japanNodes).y) + padding.top) + ")").attr("dy", ".35em").attr("text-anchor", "start").style("fill", "#1693A7").text("Japan");
+
+  svg.append("path").data([finlandNodes]).attr("class", "line finland").attr("transform", "translate(" + padding.left * 1.2 + "," + padding.top + ")").attr("stroke", "#A8A39D").attr("d", line);
+
+  svg.append("text").attr("transform", "translate(" + (xScale(_lodash2.default.last(finlandNodes).x) + padding.left * 1.5) + "," + (yScale(_lodash2.default.last(finlandNodes).y) + padding.top) + ")").attr("dy", ".35em").attr("text-anchor", "start").style("fill", "#A8A39D").text("Finland");
+
+  svg.append("path").data([brazilNodes]).attr("class", "line finland").attr("transform", "translate(" + padding.left * 1.2 + "," + padding.top + ")").attr("stroke", "#C0D860").attr("d", line);
+
+  svg.append("text").attr("transform", "translate(" + (xScale(_lodash2.default.last(brazilNodes).x) + padding.left * 1.5) + "," + (yScale(_lodash2.default.last(brazilNodes).y) + padding.top) + ")").attr("dy", ".35em").attr("text-anchor", "start").style("fill", "#C0D860").text("Brazil");
+
+  svg.append("path").data([yemenNodes]).attr("class", "line finland").attr("transform", "translate(" + padding.left * 1.2 + "," + padding.top + ")").attr("stroke", "#572E4F").attr("d", line);
+
+  svg.append("text").attr("transform", "translate(" + (xScale(_lodash2.default.last(yemenNodes).x) + padding.left * 1.5) + "," + (yScale(_lodash2.default.last(yemenNodes).y) + padding.top) + ")").attr("dy", ".35em").attr("text-anchor", "start").style("fill", "#572E4F").text("Yemen");
 });
 
 /***/ })

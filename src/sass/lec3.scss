@@ -1,0 +1,32 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1rem;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  fill: #8C8C8C;
+  text-align: center;
+}
+
+.axis {
+  text {
+    font-size: 75%;
+  }
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.scale-text {
+  fill: #11766D;
+  font-weight: bold;
+}
+
+.line {
+  stroke-width: 2px;
+  fill: none;
+}
