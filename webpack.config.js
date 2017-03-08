@@ -5,7 +5,8 @@ module.exports = {
   entry: {
     bkc1: "./src/js/bkc1.js",
     bkc2: "./src/js/bkc2.js",
-    lec1: "./src/js/lec1.js"
+    lec1: "./src/js/lec1.js",
+    lec2: "./src/js/lec2.js"
   },
   output: {
     path: path.join(__dirname, 'dist'),

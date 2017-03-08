@@ -1,0 +1,36 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1rem;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  fill: #8C8C8C;
+  text-align: center;
+}
+
+.axis{
+  path{
+    fill: none;
+    stroke: none;
+  }
+}
+.x{
+  line{
+    fill: none;
+    stroke: #e0e0e0;
+    shape-rendering: crispEdges;
+  }
+}
+.y {
+  line{
+    fill: none;
+    stroke: none;
+  };
+}
+
+.title{
+  font-size: 1.2rem;
+  font-weight: bold;
+}
