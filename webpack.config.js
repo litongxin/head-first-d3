@@ -4,7 +4,8 @@ var webpack = require('webpack')
 module.exports = {
   entry: {
     bkc1: "./src/js/bkc1.js",
-    bkc2: "./src/js/bkc2.js"
+    bkc2: "./src/js/bkc2.js",
+    lec1: "./src/js/lec1.js"
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -23,6 +24,11 @@ module.exports = {
       {
         test: /\.scss$/,
         loaders: ["style-loader","css-loader", "sass-loader"],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(csv)$/,
+        loader: "static-loader?name=${}`,",
         exclude: /node_modules/
       }
     ]

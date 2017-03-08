@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-// import * as d3_svg from 'd3-svg';
 import _ from 'lodash';
 import bookmarks from './constants/bookmarks';
 
