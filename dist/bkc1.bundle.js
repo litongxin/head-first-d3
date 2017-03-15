@@ -40706,16 +40706,19 @@ var requestParams = {
 };
 
 var draw = function draw(bookmarks) {
+  d3.select("body").selectAll("svg").remove();
   var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
   var dataSet = _lodash2.default.each(bookmarks, function (d) {
     d.created = new Date(d.created);
   });
 
-  var dataSetX = _lodash2.default.map(dataSet, 'created');
-  var dataSetY = _lodash2.default.map(dataSet, 'count');
+  var sortedDataSet = _lodash2.default.sortBy(dataSet, 'created');
 
-  var xScale = d3.scaleTime().domain([_lodash2.default.first(dataSetX), _lodash2.default.last(dataSetX)]).range([0, dataSetX.length]);
+  var dataSetX = _lodash2.default.map(sortedDataSet, 'created');
+  var dataSetY = _lodash2.default.map(sortedDataSet, 'count');
+
+  var xScale = d3.scaleTime().domain([_lodash2.default.min(dataSetX), _lodash2.default.max(dataSetX)]).range([0, dataSetX.length]);
 
   var yScale = d3.scaleLinear().domain([0, d3.max(dataSetY)]).range([height - padding.top - padding.bottom, 0]);
 
@@ -40729,7 +40732,7 @@ var draw = function draw(bookmarks) {
     return yScale(d.count);
   });
 
-  svg.append("path").data([dataSet]).attr("class", "line").attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("d", line);
+  svg.append("path").data([sortedDataSet]).attr("class", "line").attr("transform", "translate(" + padding.left + "," + padding.top + ")").attr("d", line);
 
   svg.append("g").attr("class", "axis").attr("transform", "translate(" + padding.left + "," + (height - padding.bottom) + ")").call(xAxis);
 
@@ -40746,7 +40749,7 @@ sock.onopen = function () {
 };
 sock.onmessage = function (e) {
   console.log('message', e.data);
-  draw(e.data);
+  draw(JSON.parse(e.data));
 };
 sock.onclose = function () {
   console.log('close');

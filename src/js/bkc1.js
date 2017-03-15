@@ -15,21 +15,24 @@ const requestParams = {
 };
 
 const draw = (bookmarks) => {
+  d3.select("body").selectAll("svg").remove();
   const svg = d3.select("body")
     .append("svg")
     .attr("width", width)
     .attr("height", height);
 
-  const dataSet = _.each(bookmarks, (d) => {
+  const dataSet =  _.each(bookmarks, (d) => {
     d.created = new Date(d.created);
   });
 
-  const dataSetX = _.map(dataSet, 'created');
-  const dataSetY = _.map(dataSet, 'count');
+  const sortedDataSet = _.sortBy(dataSet, 'created');
+
+  const dataSetX = _.map(sortedDataSet, 'created');
+  const dataSetY = _.map(sortedDataSet, 'count');
 
 
   const xScale = d3.scaleTime()
-    .domain([_.first(dataSetX), _.last(dataSetX)])
+    .domain([_.min(dataSetX), _.max(dataSetX)])
     .range([0, dataSetX.length]);
 
   const yScale = d3.scaleLinear()
@@ -49,7 +52,7 @@ const draw = (bookmarks) => {
     });
 
   svg.append("path")
-    .data([dataSet])
+    .data([sortedDataSet])
     .attr("class", "line")
     .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
     .attr("d", line);
@@ -86,7 +89,7 @@ sock.onopen = () => {
 };
 sock.onmessage = (e) => {
   console.log('message', e.data);
-  draw(e.data);
+  draw(JSON.parse(e.data));
 };
 sock.onclose = () => {
   console.log('close');
